@@ -5,9 +5,9 @@ import { getToken } from '@/utils/auth'
 
 // 创建一个新的axios
 const service = axios.create({
-  // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // baseURL: 'http://47.93.148.192', // url = base url + request url
-  baseURL: 'http://182.92.128.115', // url = base url + request url
+  // baseURL: 'http://182.92.128.115', // url = base url + request url
   timeout: 20000 //请求超时时间
 })
 
@@ -25,9 +25,9 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
   response => {
-    
+
     const result = response.data
-    /* 
+    /*
     code为非20000或200是抛错 可结合自己业务进行修改
     */
     if (result.code !== 20000 && result.code !== 200) {
