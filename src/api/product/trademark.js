@@ -11,8 +11,8 @@ export default {
       return request(`/admin/product/baseTrademark/getTrademarkList`);
     }
   },
-  remove(id){
-    return request.delete(`/admin/product/baseTrademark/remove/${id}`)
+  remove(id) {
+    return request.delete(`/admin/product/baseTrademark/remove/${id}`);
   },
   add(trademark) {
     return request.post(`${api_name}/save`, trademark);
