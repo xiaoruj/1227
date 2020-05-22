@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card>
-      <CategorySelector @categoryChange="handleCategoryChange" />
+      <CategorySelector ref="cs" @categoryChange="handleCategoryChange" />
     </el-card>
 
     <el-card>
@@ -47,8 +47,17 @@
                 size="mini"
                 @click="showUpdate(row)"
               ></HintButton>
-              <el-popconfirm :title="`确定删除属性 ${row.attrName} 吗?`" @onConfirm="deleteAttr(row.id)">
-                <HintButton slot="reference" title="删除" type="danger" icon="el-icon-delete" size="mini"></HintButton>
+              <el-popconfirm
+                :title="`确定删除属性 ${row.attrName} 吗?`"
+                @onConfirm="deleteAttr(row.id)"
+              >
+                <hint-button
+                  slot="reference"
+                  title="删除"
+                  type="danger"
+                  icon="el-icon-delete"
+                  size="mini"
+                />
               </el-popconfirm>
             </template>
           </el-table-column>
@@ -98,7 +107,12 @@
                 @blur="toShow(row)"
                 @keyup.enter.native="toShow(row)"
               ></el-input>
-              <span v-else @click="toEdit(row)" style="display: inline-block; width: 100%">{{ row.valueName }}</span>
+              <span
+                v-else
+                @click="toEdit(row)"
+                style="display: inline-block; width: 100%"
+                >{{ row.valueName }}</span
+              >
             </template>
           </el-table-column>
           <el-table-column label="操作">
@@ -121,7 +135,7 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep'
+import cloneDeep from "lodash/cloneDeep";
 export default {
   name: "AttrList",
   data() {
@@ -140,10 +154,10 @@ export default {
     };
   },
   mounted() {
-    this.category1Id = 2;
-    this.category2Id = 13;
-    this.category3Id = 61;
-    this.getAttrs();
+    // this.category1Id = 2;
+    // this.category2Id = 13;
+    // this.category3Id = 61;
+    // this.getAttrs();
   },
   methods: {
     toEdit(value) {
@@ -181,7 +195,7 @@ export default {
     showUpdate(attr) {
       // this.attr = attr;
       // this.attr = {...attr}
-      this.attr = cloneDeep(attr)
+      this.attr = cloneDeep(attr);
       this.isShowList = false;
     },
     addAttrValue() {
@@ -216,14 +230,15 @@ export default {
       );
       this.attrs = result.data;
     },
-    async deleteAttr(id){
-      const result = await this.$API.attr.remove(id)
-      if(result.code===200){
-        this.$message.success(`删除属性成功`)
-        this.getList()
-      }else {
-        this.$message.error(`删除属性失败`)
-      }
+    deleteAttr(id) {
+      this.$API.attr
+        .remove(id)
+        .then(result => {
+          this.getAttrs();
+        })
+        .catch(error => {
+          this.$message.error("删除属性失败");
+        });
     }
   }
 };
