@@ -79,8 +79,9 @@
 
         <el-table-column prop="address" label="操作" width="150px">
           <template slot-scope="{row, $index}">
-            <el-button type="danger" icon="el-icon-delete" size="mini"
-            @click="spuInfo.spuSaleAttrList.splice($index, 1)">删除</el-button>
+            <el-popconfirm :title="`确定删除属性吗?`" @onConfirm="deleteAttr($index)">
+                <HintButton slot="reference" title="删除" type="danger" icon="el-icon-delete" size="mini"></HintButton>
+              </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -139,9 +140,30 @@ export default {
       const result = await this.$API.spu.addUpdate(spuInfo)
       if (result.code===200) {
         this.$message.success('保存SPU成功')
+        this.resetData()
+        this.$emit('update:visible', false)
+         this.$emit('saveSuccess')
       } else {
         this.$message.error('保存SPU失败')
       }
+    },
+    resetData () {
+      this.dialogImageUrl = ''
+      this.dialogVisible = false
+
+      this.spuId = null
+      this.spuInfo = {
+        category3Id: '',
+        spuName: '',
+        description: '',
+        tmId: '',
+        spuImageList: [],
+        spuSaleAttrList: []
+      }
+      this.spuImageList = []
+      this.trademarkList = []
+      this.saleAttrList = []
+      this.attrIdAttrName = ''
     },
     handleInputConfirm(spuSaleAttr){
       const {saleAttrValueName, baseSaleAttrId} = spuSaleAttr
@@ -178,7 +200,8 @@ export default {
       })
       this.attrIdAttrName = ''
     },
-    initLoadAddData(){
+    initLoadAddData(category3Id){
+      this.spuInfo.category3Id = category3Id
       this.getTrademarkList()
       this.getSaleAttrList()
     },
@@ -216,7 +239,7 @@ export default {
       this.spuImageList = fileList
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      console.log('handleRemove', file, fileList);
       this.spuImageList = fileList
     },
     handlePictureCardPreview(file) {
@@ -224,8 +247,13 @@ export default {
       this.dialogVisible = true;
     },
     back(){
+      this.resetData()
       this.$emit('update:visible', false)
-    }
+      this.$emit('cancel')
+    },
+    deleteAttr (index) {
+      this.spuInfo.spuSaleAttrList.splice(index, 1)
+    },
   }
 }
 </script>

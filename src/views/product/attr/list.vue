@@ -153,6 +153,11 @@ export default {
       }
     };
   },
+  watch: {
+    isShowList (value) {
+      this.$refs.cs.disabled = !value
+    }
+  },
   mounted() {
     // this.category1Id = 2;
     // this.category2Id = 13;

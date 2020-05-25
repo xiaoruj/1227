@@ -29,12 +29,14 @@ service.interceptors.response.use(
     */
     if (result.code !== 20000 && result.code !== 200) {
       Message({
-        message: result.message || "Error",
+        message: result.data || result.message || "Error",
         type: "error",
         duration: 5 * 1000
       });
-
-      return Promise.reject(new Error(result.message || "未知错误"));
+      if(result.code===201){
+        return new Promise(() => {})
+      }
+      return Promise.reject(new Error(result.data || result.message || "未知错误"));
     } else {
       return result;
     }

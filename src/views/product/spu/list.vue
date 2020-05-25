@@ -12,6 +12,7 @@
           icon="el-icon-plus"
           style="margin-bottom: 20px"
           @click="showAddSpu"
+          :disabled="!category3Id"
           >添加SPU</el-button
         >
         <el-table v-loading="loading" :data="spuList" border stripe>
@@ -72,26 +73,20 @@
         一旦使用.sync, 必须是一个动态的变量属性值, 且属性名必须使用:
         但如果不加:, 传递给子组件的总是false值
        -->
-      <SpuForm ref="spuForm" :visible.sync="isShowSpuForm"></SpuForm>
+      <SpuForm ref="spuForm" :visible.sync="isShowSpuForm" @saveSuccess="handleSaveSuccess"
+        @cancel="handleCancel"></SpuForm>
 
-      <SkuForm v-show="isShowSkuForm"></SkuForm>
+      <SkuForm ref="skuForm" v-show="isShowSkuForm" @cancel="isShowSkuForm=false"
+        :saveSuccess="() => isShowSkuForm=false"></SkuForm>
     </el-card>
-    <el-dialog
-      :title="spuName + '->SKU列表'"
-      :visible.sync="isShowSkuList"
-      :before-close="handleBeforeClose"
-    >
-      <el-table :data="skuList">
-        <el-table-column label="名称" prop="skuName"></el-table-column>
-        <el-table-column label="价格(元)" prop="price"></el-table-column>
-        <el-table-column label="重量(KG)" prop="weight"></el-table-column>
+    <el-dialog title="收货地址" :visible.sync="isShowSkuList">
+      <el-table :data="skuList" border>
+        <el-table-column property="skuName" label="名称"></el-table-column>
+        <el-table-column property="price" label="价格(元)"></el-table-column>
+        <el-table-column property="weight" label="重量(KG)"></el-table-column>
         <el-table-column label="默认图片">
-          <template slot-scope="{ row }">
-            <img
-              :src="row.skuDefaultImg"
-              alt=""
-              style="width: 100px;height:100px"
-            />
+          <template slot-scope="{row}">
+            <img :src="row.skuDefaultImg" alt="" style="width: 100px;height:100px">
           </template>
         </el-table-column>
       </el-table>
@@ -118,28 +113,37 @@ export default {
       total: 0,
 
       isShowSpuForm: false,
-      spuId: "",
       isShowSkuForm: false,
       isShowSkuList: false,
       skuList: [],
-      spuName: ""
+      spu:{},
     };
   },
 
   mounted() {
-    this.category3Id = 61;
-    this.getSpuList();
+    // this.category3Id = 61;
+    // this.getSpuList();
+  },
+  watch:{
+    isShowSpuForm(value){
+      this.$refs.cs.disabled = value
+    }
   },
 
   methods: {
     showSkuAdd() {
       this.isShowSkuForm = true;
+      spu = {...spu}
+      spu.category1Id = this.category1Id
+      spu.category2Id = this.category2Id
+      this.$refs.SkuForm.initLoadAddData(spu)
     },
     showAddSpu() {
       this.isShowSpuForm = true;
-      this.$refs.spuForm.initLoadAddData();
+      this.$refs.spuForm.initLoadAddData(this.category3Id);
     },
     showUpdateSpu(id) {
+      this.spuId = id
       this.isShowSpuForm = true;
       this.$refs.spuForm.initLoadUpdateData(id);
     },
@@ -148,11 +152,13 @@ export default {
         this.category1Id = categoryId;
         this.category2Id = "";
         this.category3Id = "";
-        (this.spuList = []), (this.total = 0);
+        this.spuList = [],
+        this.total = 0
       } else if (level === 2) {
         this.category2Id = categoryId;
         this.category3Id = "";
-        (this.spuList = []), (this.total = 0);
+        this.spuList = [],
+        this.total = 0;
       } else {
         this.category3Id = categoryId;
         this.getSpuList();
@@ -179,18 +185,21 @@ export default {
         this.$message.success("删除成功");
         this.getSpuList();
       } else {
-        this.$message.error("删除成功");
+        this.$message.error(result.data || result.message || '删除成功');
       }
     },
     async showSkuList(spu) {
-      this.spuName = spu.spuName;
       this.isShowSkuList = true;
+      this.spu = spu
       const result = await this.$API.sku.getListBySpuId(spu.id);
       this.skuList = result.data;
     },
-    handleBeforeClose() {
-      this.isShowSkuList = false;
-      this.skuList = [];
+    handleSaveSuccess() {
+      this.getSpuList(this.spuId ? this.page : 1)
+      this.spuId = null
+    },
+    handleCancel(){
+      this.spuId = null
     }
   },
 
