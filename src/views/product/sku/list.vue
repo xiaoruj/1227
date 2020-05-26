@@ -98,7 +98,7 @@
       <el-row >
         <el-col :span="5">商品图片</el-col>
         <el-col :span="16">
-           <el-carousel class="img-carousel" trigger="click" height="400px">
+           <el-carousel class="img-carousel" trigger="click" height="400px" :autoplay="false">
             <el-carousel-item v-for="item in skuInfo.skuImageList" :key="item.id">
               <img :src="item.imgUrl" alt="">
             </el-carousel-item>
@@ -126,17 +126,17 @@ export default {
   mounted(){
     this.getSkuList()
   },
-  methods:{
-    handleClose(close){
+  methods: {
+    handleClose (close) {
       this.skuInfo = {}
       this.isShowSkuInfo = false
     },
-    async showSkuInfo (id){
+    async showSkuInfo (id) {
       this.isShowSkuInfo = true
       const result = await this.$API.sku.get(id)
       this.skuInfo = result.data
     },
-    changeSize(size){
+    changeSize(size) {
       this.limit = size
       this.getSkuList(1)
     },
@@ -148,11 +148,11 @@ export default {
       this.total = result.data.total
       this.loading = false
     },
-    onSale(skuId){
+    onSale(skuId) {
       this.$API.sku.onSale(skuId).then(result => {
         this.$message({
-          type:'success',
-          message:'上架成功'
+          type: 'success',
+          message: '上架成功!'
         })
         this.getSkuList(this.page)
       })
@@ -166,8 +166,8 @@ export default {
         this.getSkuList(this.page)
       })
     },
-    toUpdateSku(skuId){
-      this.$message.warning('待完成')
+    toUpdateSku (skuId) {
+      this.$message.warning('待完成!')
     },
     async deleteSku (skuId) {
       const result = await this.$API.sku.remove(skuId)
@@ -187,18 +187,35 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  .sku-list {
+    .el-carousel__indicator {
+      button {
+        width: 8px;
+        height: 8px;
+        display: inline-block;
+        border-radius: 100%;
+        background-color: hotpink;
+      }
+      &.is-active {
+        button {
+            background-color: green;
+        }
+      }
+    }
+  }
+</style>
 <style lang="scss" scoped>
   .sku-list {
     .el-row {
       height: 40px;
-      margin-left: 10px;
       .el-col {
         line-height: 40px;
         &.el-col-5 {
-          text-align: right;
-          font-weight: bold;
           font-size: 18px;
-          margin-right: 15px;
+          font-weight: bold;
+          text-align: right;
+          margin-right: 20px;
         }
       }
     }
@@ -210,17 +227,21 @@ export default {
         height: 100%;
       }
 
-      /deep/ .el-carousel__indicator {
-        button {
-          background-color: hotpink;
-        }
+      // /deep/ .el-carousel__indicator {
+      //   button {
+      //     width: 8px;
+      //     height: 8px;
+      //     display: inline-block;
+      //     border-radius: 100%;
+      //     background-color: hotpink;
+      //   }
+      //   &.is-active {
+      //     button {
+      //        background-color: green;
+      //     }
+      //   }
+      // }
 
-        &.is-active {
-          button {
-            background-color: green;
-          }
-        }
-      }
     }
   }
 </style>
