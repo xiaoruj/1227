@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>函数的call/apply/bind()</title>
-</head>
-<body>
-
-  <!--
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>函数的call/apply/bind()</title>
+  </head>
+  <body>
+    <!--
+    npm init -y
+    npm i -S atguigu-utils
     1. 区别call()/apply()/bind()
         call(obj)/apply(obj): 调用函数, 指定函数中的this为第一个参数的值
         bind(obj): 返回一个新的函数, 新函数内部会调用原来的函数, 且this为bind()指定的第一参数的值
@@ -27,30 +28,30 @@
             指定参数为bind调用的参数和后面新函数调用的参数
   -->
 
-  <script>
-    Function.prototype.call = function(obj, ...args){
-      console.log('call()');
-      if(obj===undefined || obj===null){
-        obj = window
+    <script>
+      Function.prototype.call = function(obj, ...args) {
+        console.log("call()");
+        if (obj === undefined || obj === null) {
+          obj = window;
+        }
+        obj.tempFn = this;
+        const result = obj.tempFn(...args);
+        delete obj.tempFn;
+        return result;
+      };
+      Function.prototype.apply = function(obj, args) {
+        return this.call(obj, ...args);
+      };
+    </script>
+    <script>
+      function fn(a, b) {
+        console.log(a, b, this.m, this);
       }
-      obj.tempFn = this
-      const result = obj.tempFn(...args)
-      delete obj.tempFn
-      return result
-    }
-    Function.prototype.apply = function(obj, args){
-      return this.call(obj, ...args)
-    }
-  </script>
-  <script>
-    function fn(a, b){
-      console.log(a, b, this.m, this);
-    }
-    fn(1, 2)
-    const obj = {m: 3}
-    fn.call(obj, 1,2)
-    fn.apply(obj, [1,2])
-    fn.call(undefined, 1, 2)
-  </script>
-</body>
+      fn(1, 2);
+      const obj = { m: 3 };
+      fn.call(obj, 1, 2);
+      fn.apply(obj, [1, 2]);
+      fn.call(undefined, 1, 2);
+    </script>
+  </body>
 </html>

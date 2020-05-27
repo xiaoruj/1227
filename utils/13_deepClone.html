@@ -6,8 +6,8 @@
   <title>深度克隆/深复制/深拷贝</title>
 </head>
 <body>
-  <script src="https://cdn.bootcss.com/lodash.js/4.17.15/lodash.min.js"></script>
-  <!-- 
+  <!-- <script src="https://cdn.bootcss.com/lodash.js/4.17.15/lodash.min.js"></script> -->
+  <!--
   实现深拷贝
       1). 大众乞丐版
           问题1: 函数属性会丢失
@@ -17,26 +17,93 @@
       3). 面试加强版本
           解决问题2: 循环引用正常
       4). 面试加强版本2(优化遍历性能)
-          数组: while | for | forEach() 优于 for-in | keys()&forEach() 
+          数组: while | for | forEach() 优于 for-in | keys()&forEach()
           对象: for-in 与 keys()&forEach() 差不多
   -->
-  <script src="../dist/atguigu-utils.js"></script>
+  <!-- <script src="../dist/atguigu-utils.js"></script> -->
   <script>
-    const obj1 = { 
+    const aUtils = {
+      deppClone1(target){
+        if(target!==null && typeof target==='object'){
+          return JSON.parse(JSON.stringify(target))
+        }else{
+          return target
+        }
+      },
+      deepClone2(target){
+        if(target!==null && typeof target==='object'){
+          const clone = Array.isArray(target) ? [] : {}
+          for(const key in target){
+            if(target.hasOwnProperty(key)){
+              clone[key] = aUtils.deepClone2(target[key])
+            }
+          }
+          return clone
+        }else{
+          return target
+        }
+      },
+      deepClone3(target, map=new Map()){
+        if(target!==null && typeof target==='object'){
+          let clone = map.get(target)
+          if(clone) return clone
+          clone = Array.isArray(target) ? [] : {}
+          map.set(target,clone)
+          for(const key in target){
+            if(target.hasOwnProperty(key)){
+              clone[key] = aUtils.deepClone3(target[key], map)
+            }
+          }
+          return clone
+        }else{
+          return target
+        }
+      },
+      deepClone4(target, map=new Map()){
+        if(target!==null && typeof target==='object'){
+          // const map = new Map()
+          let clone = map.get(target)
+          if(clone) return clone
+          if(Array.isArray(target)){
+            clone = []
+            map.set(target, clone)
+            target.forEach((item, index) => {
+              clone[index] = aUtils.deepClone4(item, map)
+            })
+          }else{
+            clone = {}
+            map.set(target, clone)
+            for(const key in target){
+              if(target.hasOwnProperty(key)){
+                clone[key] = aUtils.deepClone4(target[key], map)
+              }
+            }
+          }
+          return clone
+        }else{
+          return target
+        }
+      },
+    }
+  </script>
+  <script>
+    const obj1 = {
       a: 1,
       b: [ 'e', 'f', 'g'],
       c: { h: { i: 2 } },
       d: function (){}
-     }
-     obj1.b.push(obj1.c)
-     obj1.c.j = obj1.b
-     
+    }
+    obj1.b.push(obj1.c)
+    obj1.c.j = obj1.b
+
     //  const obj1Clone = _.cloneDeep(obj1)
-    //  const obj1Clone = aUtils.deepClone1(obj1)
-    //  const obj1Clone = aUtils.deepClone2(obj1)
-    //  const obj1Clone = aUtils.deepClone3(obj1)
-     const obj1Clone = aUtils.deepClone4(obj1)
-     console.log(obj1Clone, obj1Clone.c === obj1.c, obj1Clone.d===obj1.d)
+    //  const cloneObj1 = aUtils.deepClone1(obj1)
+    //  const cloneObj1 = aUtils.deepClone2(obj1)
+    //  const cloneObj1 = aUtils.deepClone3(obj1)
+    const cloneObj1 = aUtils.deepClone4(obj1)
+    console.log(cloneObj1===obj1, cloneObj1.c.h===obj1.c.h, cloneObj1) // false false
+    console.log(cloneObj1.d===obj1.d)
+
   </script>
 </body>
 </html>

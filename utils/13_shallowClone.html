@@ -6,22 +6,61 @@
   <title>浅克隆/浅复制/浅拷贝</title>
 </head>
 <body>
-  <!-- 
+  <!--
     实现浅拷贝
         方法一: 利用ES6语法
         方法二: 利用ES5语法: for...in
   -->
-  <script src="../dist/atguigu-utils.js"></script>
+  <!-- <script src="../dist/atguigu-utils.js"></script> -->
+  <script>
+    const aUtils = {
+      clone1(target){
+        if(target!==null && typeof target==='object'){
+          if(Array.isArray(target)){
+            // return [...target]
+            // return target.slice()
+            // return target.filter(item => ture)
+            // return target.map(item => item)
+          }else{
+            return {...target}
+          }
+        }else{
+          return target
+        }
+      },
+      clone2(target){
+        if(target!==null && typeof target==='object'){
+          const clone = Array.isArray(target)? [] : {}
+          for(const key in target){
+            if(target.hasOwnProperty(key)){
+              clone[key] = target[key]
+            }
+          }
+          return clone
+        }
+        else{
+          return target
+        }
+      }
+    }
+  </script>
   <script>
     const obj1 = { x: 'abc', y: {m: 1} }
-    // const obj2 = aUtils.clone1(obj1)
-    const obj2 = aUtils.clone2(obj1)
-    console.log(obj2, obj2===obj1, obj2.x===obj1.x, obj2.y===obj1.y)
+    // const clone = aUtils.clone1(obj1)
+    const clone = aUtils.clone2(obj1)
+    console.log(clone===obj1, obj1.y===clone.y, clone)
 
     const arr1 = ['abc', {m: 1}]
-    // const arr2 = aUtils.clone1(arr1)
-    const arr2 = aUtils.clone2(arr1)
-    console.log(arr2, arr2===arr1, arr2[0]===arr1[0], arr2[1]===arr1[1])
+    // const clone2 = aUtils.clone1(arr1)
+    const clone2 = aUtils.clone2(arr1)
+    console.log(clone2===arr1, arr1[1]===clone2[1], arr1)
+    function fn(){
+
+    }
+    // const clone3 = aUtils.clone1(fn)
+    const clone3 = aUtils.clone2(fn)
+    console.log(clone3===fn);
+
   </script>
 </body>
 </html>

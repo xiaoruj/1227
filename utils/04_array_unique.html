@@ -9,8 +9,8 @@
 </head>
 
 <body>
-  <!-- 
-    1). 理解: 
+  <!--
+    1). 理解:
         创建一个不重复的数组副本, 只有首次出现的元素才会被保留
         如: uniq([2, 3, 2, 7, 6, 7]) ==> [2, 3, 7, 6]
     2). 实现:
@@ -21,7 +21,37 @@
         方法3: 利用ES6语法: from + Set 或者 ... + Set
                说明: 编码简洁
   -->
-  <script src="../dist/atguigu-utils.js"></script>
+  <!-- <script src="../dist/atguigu-utils.js"></script> -->
+  <script>
+    const aUtils = {
+      unique1 (arr){
+        const array = []
+        arr.forEach(item => {
+          if(array.indexOf(item)===-1){
+            array.push(item)
+          }
+        })
+        return array
+      },
+      unique2(arr){
+        const array = []
+        const container = {}
+        arr.forEach(item => {
+          // if(array.indexOf(item)===-1){
+          // if(!container[item]){
+          if(!container.hasOwnProperty(item)){
+            container[item] = true
+            array.push(item)
+          }
+        })
+        return array
+      },
+      unique3(arr){
+        // return Array.from(new Set(arr))
+        return [...new Set(arr)]
+      }
+    }
+  </script>
   <script>
     console.log(aUtils.unique1([2, 3, 2, 7, 6, 7]))
     console.log(aUtils.unique2([2, 3, 2, 7, 6, 7]))
