@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const aUtils = {
+      unique1(arr){
+        const array = []
+        arr.forEach(item => {
+          if(array.indexOf(item)===-1){
+            array.push(item)
+          }
+        })
+        return array
+      },
+      unique2(arr){
+        const array = []
+        const container ={}
+        arr.forEach(item => {
+          if(!container.hasOwnProperty(item)){
+            container[item] = true
+            array.push(item)
+          }
+        })
+        return array
+      },
+      unique3(arr){
+        return [...new Set(arr)]
+      }
+    }
+  </script>
+  <script>
+    console.log(aUtils.unique1([2, 3, 2, 7, 6, 7]))
+    console.log(aUtils.unique2([2, 3, 2, 7, 6, 7]))
+    console.log(aUtils.unique3([2, 3, 2, 7, 6, 7]))
+  </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const aUtils = {
+      deepClone1(target){
+        if(target!==null && typeof target==='object'){
+          return JSON.parse(JSON.stringify(target))
+        }else{
+          return target
+        }
+      },
+      deepClone2(target){
+        if(target!==null && typeof target==='object'){
+          const clone = Array.isArray(target) ? [] : {}
+          for(const key in target){
+            if(target.hasOwnProperty(key)){
+              clone[key] = aUtils.deepClone2(target[key])
+            }
+          }
+          return clone
+        }
+        else{
+          return target
+        }
+      },
+      deepClone3(target, map=new Map()){
+        if(target!==null && typeof target==='object'){
+          let clone = map.get(target)
+          if(clone) return clone
+          clone = Array.isArray(target) ? [] : {}
+          map.set(target,clone)
+          for(const key in target){
+            if(target.hasOwnProperty(key)){
+              clone[key] = aUtils.deepClone3(target[key], map)
+            }
+          }
+          return clone
+        }else{
+          return target
+        }
+      },
+      deepClone4(target, map=new Map()){
+        if(target!==null && typeof target==='object'){
+          let clone = map.get(target)
+          if(clone) return clone
+          if(Array.isArray(target)){
+            clone = []
+            map.set(target, clone)
+            target.forEach((item, index) => {
+              clone[index] = aUtils.deepClone4(item, map)
+            })
+          }else{
+            clone = {}
+            map.set(target, clone)
+            for(const key in target){
+              if(target.hasOwnProperty(key)){
+                clone[key] = aUtils.deepClone4(target[key], map)
+              }
+            }
+          }
+          return clone
+        }else{
+          return target
+        }
+      }
+    }
+  </script>
+  <script>
+    const obj1 = {
+      a: 1,
+      b: [ 'e', 'f', 'g'],
+      c: { h: { i: 2 } },
+      d: function (){}
+    }
+    obj1.b.push(obj1.c)
+    obj1.c.j = obj1.b
+
+    //  const obj1Clone = _.cloneDeep(obj1)
+    //  const cloneObj1 = aUtils.deepClone1(obj1)
+    //  const cloneObj1 = aUtils.deepClone2(obj1)
+    //  const cloneObj1 = aUtils.deepClone3(obj1)
+    const cloneObj1 = aUtils.deepClone4(obj1)
+    console.log(cloneObj1===obj1, cloneObj1.c.h===obj1.c.h, cloneObj1) // false false
+    console.log(cloneObj1.d===obj1.d)
+
+  </script>
+</body>
+</html>

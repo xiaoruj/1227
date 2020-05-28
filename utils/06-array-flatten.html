@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const aUtils = {
+      flatten1(array){
+        return array.reduce((pre, item) => {
+          if(Array.isArray(item) && item.some(cItem => Array.isArray(cItem))){
+            pre = pre.concat(aUtils.flatten1(item))
+          }else{
+            pre = pre.concat(item)
+          }
+          return pre
+        }, [])
+      },
+      flatten2(array){
+        array = [].concat(...array)
+        while(array.some(item => Array.isArray(item))){
+          array = [].concat(...array)
+        }
+        return array
+      }
+    }
+  </script>
+  <script>
+    // [1]  ---> [1, 3, 2, 4]
+    // [3, [2, 4]] --> [3] --> [3, 2, 4]
+    // [2, 4] --> [2, 4]
+    console.log(aUtils.flatten1([1, [3, [2, 4]]]))
+    console.log(aUtils.flatten2([1, [3, [2, 4]]]))
+  </script>
+</body>
+</html>

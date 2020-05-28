@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function Person(name) {
+      this.name = name
+      // return {}
+      // return []
+      // return function (){}
+      // return 1
+      // return undefined
+    }
+
+    const p = new Person('tom')
+    console.log('p', p)
+
+    // const p2 = aUtils.newInstance(Person, 'Jack', 13)
+    // console.log(p2, p2.constructor)
+
+  </script>
+  <script>
+    function newInstance(Fn, ...args){
+      const obj = {}
+      obj.__proto__.constructor = Fn
+      const result = Fn.call(obj, ...args)
+      if(result instanceof Object){
+        return result
+      }
+      return obj
+    }
+    const p2 = newInstance(Person, 'jask')
+    console.log('p2', p2);
+
+  </script>
+  <script>
+    console.log(p instanceof Person);
+    console.log(p instanceof Object);
+    console.log(Person instanceof Object);
+    console.log(Object instanceof Person);
+    function myInstanceOf(obj, Type){
+      let protoObject = obj.__proto__
+      while(protoObject){
+        if(protoObject===Type.prototype){
+          return true
+        }
+        protoObject = protoObject.__proto__
+      }
+      return false
+    }
+    console.log(myInstanceOf(p, Person));
+    console.log(myInstanceOf(p, Object));
+    console.log(myInstanceOf(Person, Object));
+    console.log(myInstanceOf(Object, Person));
+  </script>
+</body>
+</html>
