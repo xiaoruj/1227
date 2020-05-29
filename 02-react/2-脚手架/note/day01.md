@@ -45,30 +45,40 @@
 
 1. this 不一样
    工厂函数没有 this undefined
-   ES6 类组件函数中有 this this指向ES6类组件实例对象
+   ES6 类组件函数中有 this this 指向 ES6 类组件实例对象
 2. 功能不一样
    因为工厂函数没有 this，有些功能默认实现不了
    因为 ES6 类组件有 this，所以可以实现
 
-# 在React绑定事件
+# 在 React 绑定事件
+
     采用小驼峰命名法
-# ES6类组件 实例对象三大属性 state 状态
+
+# ES6 类组件 实例对象三大属性 state 状态
+
     作用：用来更新用户界面
-    使用 
+    使用
        1. 初始化状态
         constructor() {
           super();
           this.state = { xxx }
         }
-        简写state = {xxx} 
-       2. 读取状态  this.state.xxx 
+        简写state = {xxx}
+       2. 读取状态  this.state.xxx
        3. 更新状态  this.setState({ xxx })
-# 在React 类组件中，this指向：
-1. 如果是生命周期函数中，this指向组件实例对象 constructor / render
-2. 如果在其他自定义函数中，this默认指向undefined（严格模式）
-    需求: 需要将 其他自定义函数 this 指向组件实例对象
-    解决：用箭头函数
-# ES6类组件 实例对象三大属性props
+
+# 在 React 类组件中，this 指向：
+
+1. 如果是生命周期函数中，this 指向组件实例对象 constructor / render
+2. 如果在其他自定义函数中，this 默认指向 undefined（严格模式）
+   需求: 需要将 其他自定义函数 this 指向组件实例对象
+   解决：用箭头函数
+
+# ES6 类组件 实例对象三大属性 props
+
+    使用组件间通信 props
+    父 --> 子 通信 使用普通属性
+    子 --> 父 通信 使用函数属性
     import PropTypes from "prop-types"用来对props类型检查的库
     对传入的props进行类型/必要性检查
     读取props
@@ -79,3 +89,28 @@
     static 定义类的静态方法
     （类的直接方法，只有类可以使用，实例对象不能使用）
     普通方法是实例对象可以使用，类不能使用
+
+# ES6 类组件 实例对象三大属性 ref
+
+    作用：获取DOM元素,通过ref获取组件内容特定标签对象, 进行读取其相关数据
+    ref={this.inputRef}
+    console.log(this.inputRef); // 没有挂载ref {current: null}值为null
+    console.log(this.inputRef); // 挂载ref {current: input}
+
+# 受控组件
+
+    通过state和onChange事件来自动收集表单数据
+    e.preventDefault();禁止表单的默认行为
+    合成事件：做了兼容性处理,在React中，事件都是合成事件，不是原生DOM事件
+
+# 函数柯里化：
+
+    封装一个函数，来复用一下两个函数，高阶函数（执行函数返回值是一个新函数）
+    function fn(a, b) { return a + b} 普通函数
+        --> 经过函数柯里化处理的函数
+        function fn(a) {
+            return function (b) {
+              return a + b;
+            }
+        }
+    闭包的典型应用
