@@ -38,9 +38,7 @@ module.exports = {
               "@babel/preset-env", // 编译普通JS语法
               "@babel/preset-react", // 编译jsx语法
             ],
-            plugins: [
-              "@babel/plugin-proposal-class-properties"
-            ], // 插件
+            plugins: ["@babel/plugin-proposal-class-properties"], // 插件
           },
         },
       },
@@ -100,13 +98,21 @@ module.exports = {
   // 自动化，开发服务器
   devServer: {
     contentBase: resolve("public"), // 开发服务器将哪个目录的资源暴露出去
-    port: 9528, // 服务器端口号
+    port: 9527, // 服务器端口号
     host: "localhost", // 服务器域名,
     compress: true,
     open: true, // 自动打开浏览器
     hot: true,
     quiet: false, // 启用静默模式，在终端不打印多余信息
     clientLogLevel: "none", // 在浏览器控制台不打印多余内容
+    proxy: {
+      // 配置代理服务器
+      "/api": {
+        target: "http://localhost:3000",
+        pathRewrite: { "^/api": "" },
+        changeOrigin: true,
+      },
+    },
   },
   devtool: "cheap-module-source-map", // 开发环境
   resolve: {

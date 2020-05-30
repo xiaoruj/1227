@@ -1,38 +1,14 @@
-import React from "react";
-// import Child from "./pages/Child";
-// import FuncComp from './pages/FuncComp';
-// import ClassComp from './pages/ClassComp';
-class App extends React.Component {
-  state = {
-    username:"",
-    password:""
-  }
-  login = (e) => {
-    e.preventDefault()
-    const {username, password} = this.state
-    console.log(username, password);
-    this.setState({
-      username:"",
-      password:""
-    })
-  }
-  handleChange = (key) => {
-    return (e) => {
-      this.setState({
-        [key]: e.target.value.trim()
-      })
-    }
-  }
-  render() {
-    const {username, password} = this.state
+// console.log(123); console.log("hello vue cli")();
+import React, { Component } from "react";
+import List from "./pages/List";
+import Search from "./pages/Search";
+export default class App extends Component {
+  render(){
     return (
-      <form onSubmit={this.login}>
-        <input type="text" onChange={this.handleChange('username')} value={username} />
-        密码:
-        <input type="password" onChange={this.handleChange('password')} value={password} />
-        <button type="submit">登录</button>
-      </form>
-    );
+      <div className="container">
+        <Search />
+        <List />
+      </div>
+    )
   }
 }
-export default App;
