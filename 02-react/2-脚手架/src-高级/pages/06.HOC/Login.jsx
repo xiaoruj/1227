@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import withForm from "./withForm";
+@withForm('登录组件')
 class Login extends Component {
 //   state = {
 //     username: "",
@@ -19,8 +20,6 @@ class Login extends Component {
   render() {
     const { handleChange, handleSubmit } = this.props;
     return (
-      <>
-        <h1>登录页面</h1>
         <form onSubmit={handleSubmit}>
           用户名:
           <input type="text" onChange={handleChange("username")} /> <br />
@@ -29,9 +28,7 @@ class Login extends Component {
           <br />
           <button type="submit">登录</button>
         </form>
-      </>
     );
   }
 }
-const NewLogin = withForm(Login);
-export default NewLogin;
+export default Login;
