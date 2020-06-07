@@ -1,36 +1,19 @@
 import { combineReducers } from "redux";
-import { GET_USERS_DATA_FAILED, GET_USERS_DATA_SUCCESS, LOADING, } from "./constants";
-const initUserList = {
-  isFirstView: true,
-  isLoading: false,
-  users: null,
-  error: '',
-}
-function userList(prevState = initUserList, action){
-  switch(action.type){
-    case LOADING:
-      return{
-        ...prevState,
-        isFirstView: false,
-        isLoading: true,
-      }
-    case GET_USERS_DATA_SUCCESS:
-      return {
-        ...prevState,
-        isLoading: true,
-        users: action.data,
-      }
-    case GET_USERS_DATA_FAILED:
-      return{
-        ...prevState,
-        isLoading: true,
-        users: null,
-        error: action.data,
-      }
+import { ADD_COMMENT, DEL_COMMENT } from "./constants";
+const initComments = [
+  { id: 1, name: "李易峰", content: "我在北京等你" },
+  { id: 2, name: "晓儒纪", content: "尚硅谷" },
+];
+function comments(prevState = initComments, action) {
+  switch (action.type) {
+    case ADD_COMMENT:
+      return [action.data, ...prevState];
+    case DEL_COMMENT:
+      return prevState.filter((comment) => comment.id !== action.data);
     default:
-      return prevState
+      return prevState;
   }
 }
 export default combineReducers({
-  userList,
-})
+  comment,
+});

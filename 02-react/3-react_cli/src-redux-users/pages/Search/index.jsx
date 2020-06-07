@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 // import PubSub from "pubsub-js";
-
-export default class Search extends Component {
+import { connect } from "react-redux";
+import { getUsersData } from "../../redux/actions";
+@connect(null, { getUsersData })
+class Search extends Component {
   state = {
     searchName: "",
   };
@@ -18,6 +20,7 @@ export default class Search extends Component {
 
     if (searchName) {
       // PubSub.publish("SEARCHNAME", searchName);
+      this.props.getUsersData(searchName);
     }
   };
 
@@ -37,3 +40,4 @@ export default class Search extends Component {
     );
   }
 }
+export default Search;
